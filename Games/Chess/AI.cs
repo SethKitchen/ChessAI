@@ -2,7 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Joueur.cs.Games.Chess
@@ -35,8 +38,10 @@ namespace Joueur.cs.Games.Chess
         /// <returns>string of you AI's name.</returns>
         public override string GetName()
         {
-            return "Chess C# Player"; // REPLACE THIS WITH YOUR TEAM NAME!
+            return "SethRocksSocks"; // REPLACE THIS WITH YOUR TEAM NAME!
         }
+
+        bool is64Bit;
 
         /// <summary>
         /// This is automatically called when the game first starts, once the Game object and all GameObjects have been initialized, but before any players do anything.
@@ -47,6 +52,22 @@ namespace Joueur.cs.Games.Chess
         public override void Start()
         {
             base.Start();
+            Console.WriteLine("---LET\'S GO LEEEEEEEERROOOOOOOOOOY JENKINNNNNNNNNNS!!!!!---");
+            if (IntPtr.Size == 4)
+            {
+                is64Bit = false;
+                Console.WriteLine("Computer is 32 bit with " + Environment.ProcessorCount + " processors.");
+            }
+            else if (IntPtr.Size == 8)
+            {
+                is64Bit = true;
+                Console.WriteLine("Computer is 64 bit with " + Environment.ProcessorCount + " processors.");
+            }
+            else
+            {
+                //DAS FUTURE
+                is64Bit = false;
+            }
         }
 
         /// <summary>
@@ -91,6 +112,74 @@ namespace Joueur.cs.Games.Chess
             // 1) print the board to the console
             this.PrintCurrentBoard();
 
+            string bestMove = "";
+            if (is64Bit)
+            {
+                string s = Directory.GetCurrentDirectory();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = @"Games\Chess\sethrocks_x64.exe";
+                startInfo.RedirectStandardInput = true;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+                startInfo.CreateNoWindow = true;
+                try
+                {
+                    // Start the process with the info we specified.
+                    // Call WaitForExit and then the using statement will close.
+                    using (Process exeProcess = Process.Start(startInfo))
+                    {
+                        exeProcess.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                        exeProcess.StandardInput.WriteLine("position fen " + Game.Fen);
+                        exeProcess.StandardInput.WriteLine("go movetime 7500 ");
+                        string output = "";
+                        while (!output.Contains("bestmove"))
+                        {
+                            output = exeProcess.StandardOutput.ReadLine();
+                        }
+                        bestMove = output.Substring(9, 4);
+                        Console.WriteLine("Best move is: " + bestMove);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+            else
+            {
+                string s = Directory.GetCurrentDirectory();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = @"Games\Chess\sethrocks_x32.exe";
+                startInfo.RedirectStandardInput = true;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+                startInfo.CreateNoWindow = true;
+                try
+                {
+                    // Start the process with the info we specified.
+                    // Call WaitForExit and then the using statement will close.
+                    using (Process exeProcess = Process.Start(startInfo))
+                    {
+                        exeProcess.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                        exeProcess.StandardInput.WriteLine("position fen " + Game.Fen);
+                        exeProcess.StandardInput.WriteLine("go movetime 7500 ");
+                        string output = "";
+                        while (!output.Contains("bestmove"))
+                        {
+                            output = exeProcess.StandardOutput.ReadLine();                          
+                        }
+                        bestMove = output.Substring(9, 4);
+                        Console.WriteLine("Best move is: " + bestMove);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
             // 2) print the opponent's last move to the console
             if (this.Game.Moves.Count > 0) {
                 Console.WriteLine("Opponent's Last Move: '" + this.Game.Moves.Last().San + "'");
@@ -100,11 +189,17 @@ namespace Joueur.cs.Games.Chess
             Console.WriteLine("Time Remaining: " + this.Player.TimeRemaining + " ns");
 
             // 4) make a random (and probably invalid) move.
-            var rand = new Random();
-            var randomPiece = this.Player.Pieces[rand.Next(this.Player.Pieces.Count)];
-            string randomFile = "" + (char)(((int)"a"[0]) + rand.Next(0, 8));
-            int randomRank = rand.Next(0, 8) + 1;
-            randomPiece.Move(randomFile, randomRank);
+            Piece toMove=Player.Pieces[0];
+            foreach(Piece p in Player.Pieces)
+            {
+                if (p.File == bestMove[0]+"" && p.Rank==int.Parse(bestMove[1]+""))
+                {
+                    toMove = p;
+                }
+            }
+            string fileToMoveTo = bestMove[2] + "";
+            int rankToMoveTo = int.Parse(bestMove[3] + "");
+            toMove.Move(fileToMoveTo, rankToMoveTo, "Queen");
 
             return true; // to signify we are done with our turn.
         }
