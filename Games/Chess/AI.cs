@@ -125,6 +125,11 @@ namespace Joueur.cs.Games.Chess
             foreach (var dir in dirs)
             {
                 Console.WriteLine("{0}", dir.Substring(dir.LastIndexOf("\\") + 1));
+                string[] files=Directory.GetFiles(dir);
+                foreach(string file in files)
+                {
+                    Console.WriteLine(file);
+                }
             }
             Console.WriteLine("{0} directories found.", dirs.Count);
 
