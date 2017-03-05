@@ -70,6 +70,15 @@ namespace Joueur.cs.Games.Chess
             }
         }
 
+        public static bool IsLinux
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
+        }
+
         /// <summary>
         /// This is automatically called every time the game (or anything in it) updates.
         /// </summary>
@@ -117,7 +126,14 @@ namespace Joueur.cs.Games.Chess
             {
                 string s = Directory.GetCurrentDirectory();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = @"Games\Chess\sethrocks_x64.exe";
+                if (IsLinux)
+                {
+                    startInfo.FileName = @"Games\Chess\sethrockslinux_x64";
+                }
+                else
+                {
+                    startInfo.FileName = @"Games\Chess\sethrocks_x64.exe";
+                }
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -150,7 +166,14 @@ namespace Joueur.cs.Games.Chess
             {
                 string s = Directory.GetCurrentDirectory();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = @"Games\Chess\sethrocks_x32.exe";
+                if (IsLinux)
+                {
+                    startInfo.FileName = @"Games\Chess\sethrocks_x32";
+                }
+                else
+                {
+                    startInfo.FileName = @"Games\Chess\sethrocks_x32.exe";
+                }
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
