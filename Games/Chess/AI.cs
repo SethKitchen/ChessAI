@@ -140,11 +140,11 @@ namespace Joueur.cs.Games.Chess
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 if (IsLinux)
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x64win.exe";
+                    startInfo.FileName = @"Games/Chess/sethrocks_x64win.exe";
                 }
                 else
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x64win.exe";
+                    startInfo.FileName = @"Games/Chess/sethrocks_x64win.exe";
                 }
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute = false;
@@ -180,11 +180,11 @@ namespace Joueur.cs.Games.Chess
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 if (IsLinux)
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x32win.exe";
+                    startInfo.FileName = @"Games/Chess/sethrocks_x32win.exe";
                 }
                 else
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x32win.exe";
+                    startInfo.FileName = @"Games/Chess/sethrocks_x32win.exe";
                 }
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute = false;
