@@ -120,6 +120,13 @@ namespace Joueur.cs.Games.Chess
 
             // 1) print the board to the console
             this.PrintCurrentBoard();
+            List<string> dirs = new List<string>(Directory.EnumerateDirectories(Assembly.GetEntryAssembly().Location));
+
+            foreach (var dir in dirs)
+            {
+                Console.WriteLine("{0}", dir.Substring(dir.LastIndexOf("\\") + 1));
+            }
+            Console.WriteLine("{0} directories found.", dirs.Count);
 
             string bestMove = "";
             if (is64Bit)
