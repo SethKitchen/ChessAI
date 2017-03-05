@@ -142,7 +142,7 @@ namespace Joueur.cs.Games.Chess
                 {
                     var psi = new ProcessStartInfo
                     {
-                        FileName = "/bin/bash",
+                        FileName = Environment.CurrentDirectory + "Games/Chess/sethrocks_x64lin2",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardInput = true,
@@ -150,22 +150,30 @@ namespace Joueur.cs.Games.Chess
                         CreateNoWindow = true,
                     };
 
+                    Console.WriteLine("Starting process...");
                     using (var p = Process.Start(psi))
                     {
                         if (p != null)
                         {
-                            Console.WriteLine("Changing Directory...");
-                            p.StandardInput.WriteLine("cd " + Environment.CurrentDirectory + "Games/Chess/");
-                            Console.WriteLine("starting program");
-                            p.StandardInput.WriteLine("./sethrocks_x64lin2");
+                            Console.WriteLine("Process is not null setting threads...");
                             p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                            Console.WriteLine("Setting position");
                             p.StandardInput.WriteLine("position fen " + Game.Fen);
+                            Console.WriteLine("setting movetime");
                             p.StandardInput.WriteLine("go movetime 7500 ");
                             string output = "";
+                            Console.WriteLine("Checking for errors:");
+                            while(!p.StandardError.EndOfStream)
+                            {
+                                Console.WriteLine("Error:");
+                                Console.WriteLine(p.StandardError.ReadLine());
+                            }
+                            Console.WriteLine("Checking is standard input is null");
                             if(p.StandardOutput==null)
                             {
                                 Console.WriteLine("standard output is null");
                             }
+                            Console.WriteLine("Looping until best move");
                             while (!output.Contains("bestmove") && p.StandardOutput != null)
                             {
                               output = p.StandardOutput.ReadLine();  

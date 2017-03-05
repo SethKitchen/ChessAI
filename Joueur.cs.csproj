@@ -97,13 +97,13 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Games\Chess\sethrocks_x64lin">
+    <None Include="Games\Chess\sethrocks_x64lin2">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Games\Chess\sethrocks_x64lin_bmi2">
+    <None Include="Games\Chess\sethrocks_x64lin2_bmi2">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Games\Chess\sethrocks_x64lin_modern">
+    <None Include="Games\Chess\sethrocks_x64lin2_modern">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
