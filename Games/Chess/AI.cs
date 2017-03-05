@@ -56,12 +56,12 @@ namespace Joueur.cs.Games.Chess
             if (IntPtr.Size == 4)
             {
                 is64Bit = false;
-                Console.WriteLine("Computer is 32 bit with " + Environment.ProcessorCount + " processors.");
+                Console.WriteLine("Computer is "+(IsLinux? "linux" : "windows")+" 32 bit with " + Environment.ProcessorCount + " processors.");
             }
             else if (IntPtr.Size == 8)
             {
                 is64Bit = true;
-                Console.WriteLine("Computer is 64 bit with " + Environment.ProcessorCount + " processors.");
+                Console.WriteLine("Computer is " + (IsLinux ? "linux" : "windows") + " 64 bit with " + Environment.ProcessorCount + " processors.");
             }
             else
             {
@@ -128,11 +128,11 @@ namespace Joueur.cs.Games.Chess
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 if (IsLinux)
                 {
-                    startInfo.FileName = @"Games\Chess\sethrockslinux_x64";
+                    startInfo.FileName = @"Games\Chess\sethrocks_x64lin";
                 }
                 else
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x64.exe";
+                    startInfo.FileName = @"Games\Chess\sethrocks_x64win.exe";
                 }
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute = false;
@@ -168,11 +168,11 @@ namespace Joueur.cs.Games.Chess
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 if (IsLinux)
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x32";
+                    startInfo.FileName = @"Games\Chess\sethrocks_x32win.exe";
                 }
                 else
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x32.exe";
+                    startInfo.FileName = @"Games\Chess\sethrocks_x32win.exe";
                 }
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute = false;

@@ -1,0 +1,14 @@
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x32win.exe
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x64win.exe
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x64win_bmi2.exe
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x64win_popcnt.exe
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x64lin
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x64lin_bmi2
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Games\Chess\sethrocks_x64lin_modern
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Joueur.cs.exe
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Joueur.cs.pdb
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Seth\Desktop\old whoa\whoa\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Seth\Desktop\old whoa\whoa\obj\x86\Debug\Joueur.cs.csprojResolveAssemblyReference.cache
+C:\Users\Seth\Desktop\old whoa\whoa\obj\x86\Debug\Joueur.cs.exe
+C:\Users\Seth\Desktop\old whoa\whoa\obj\x86\Debug\Joueur.cs.pdb
