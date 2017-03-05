@@ -128,7 +128,7 @@ namespace Joueur.cs.Games.Chess
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 if (IsLinux)
                 {
-                    startInfo.FileName = @"Games\Chess\sethrocks_x64lin";
+                    startInfo.FileName = @"Games\Chess\sethrocks_x64win.exe";
                 }
                 else
                 {
