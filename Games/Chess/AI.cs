@@ -16,8 +16,8 @@ namespace Joueur.cs.Games.Chess
     class AI : BaseAI
     {
         #region Properties
-        #pragma warning disable 0169 // the never assigned warnings between here are incorrect. We set it for you via reflection. So these will remove it from the Error List.
-        #pragma warning disable 0649
+#pragma warning disable 0169 // the never assigned warnings between here are incorrect. We set it for you via reflection. So these will remove it from the Error List.
+#pragma warning disable 0649
         /// <summary>
         /// This is the Game object itself, it contains all the information about the current game
         /// </summary>
@@ -26,8 +26,8 @@ namespace Joueur.cs.Games.Chess
         /// This is your AI's player. This AI class is not a player, but it should command this Player.
         /// </summary>
         public readonly Chess.Player Player;
-        #pragma warning restore 0169
-        #pragma warning restore 0649
+#pragma warning restore 0169
+#pragma warning restore 0649
         #endregion
 
 
@@ -56,7 +56,7 @@ namespace Joueur.cs.Games.Chess
             if (IntPtr.Size == 4)
             {
                 is64Bit = false;
-                Console.WriteLine("Computer is "+(IsLinux? "linux" : "windows")+" 32 bit with " + Environment.ProcessorCount + " processors.");
+                Console.WriteLine("Computer is " + (IsLinux ? "linux" : "windows") + " 32 bit with " + Environment.ProcessorCount + " processors.");
             }
             else if (IntPtr.Size == 8)
             {
@@ -136,10 +136,11 @@ namespace Joueur.cs.Games.Chess
             string bestMove = "";
             if (is64Bit)
             {
-                string s = Directory.GetCurrentDirectory();
+                Console.WriteLine("Is 64 bit");
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 if (IsLinux)
                 {
+                    Console.WriteLine("IsLinux. Setting fileName");
                     startInfo.FileName = @"Games/Chess/sethrocks_x64win.exe";
                 }
                 else
@@ -151,27 +152,81 @@ namespace Joueur.cs.Games.Chess
                 startInfo.RedirectStandardOutput = true;
                 startInfo.RedirectStandardError = true;
                 startInfo.CreateNoWindow = true;
+                Console.WriteLine("Set all variables");
                 try
                 {
                     // Start the process with the info we specified.
                     // Call WaitForExit and then the using statement will close.
+                    Console.WriteLine("Starting Process...");
                     using (Process exeProcess = Process.Start(startInfo))
                     {
+                        Console.WriteLine("Setting threads value");
                         exeProcess.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                        Console.WriteLine("setting position fen");
                         exeProcess.StandardInput.WriteLine("position fen " + Game.Fen);
+                        Console.WriteLine("setting go");
                         exeProcess.StandardInput.WriteLine("go movetime 7500 ");
                         string output = "";
                         while (!output.Contains("bestmove"))
                         {
                             output = exeProcess.StandardOutput.ReadLine();
                         }
+                        Console.WriteLine("got bestMove");
                         bestMove = output.Substring(9, 4);
                         Console.WriteLine("Best move is: " + bestMove);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Console.WriteLine(ex + ex.Message + ex.StackTrace);
+
+                    if (is64Bit)
+                    {
+                        Console.WriteLine("TRY:Is 64 bit");
+                        ProcessStartInfo startInfo2 = new ProcessStartInfo();
+                        if (IsLinux)
+                        {
+                            Console.WriteLine("TRY: IsLinux. Setting fileName");
+                            startInfo2.FileName = @"Games/Chess/sethrocks_x64lin";
+                        }
+                        else
+                        {
+                            startInfo2.FileName = @"Games/Chess/sethrocks_x64win.exe";
+                        }
+                        startInfo2.RedirectStandardInput = true;
+                        startInfo2.UseShellExecute = false;
+                        startInfo2.RedirectStandardOutput = true;
+                        startInfo2.RedirectStandardError = true;
+                        startInfo2.CreateNoWindow = true;
+                        Console.WriteLine("TRY: Set all variables");
+                        try
+                        {
+                            // Start the process with the info we specified.
+                            // Call WaitForExit and then the using statement will close.
+                            Console.WriteLine("TRY: Starting Process...");
+                            using (Process exeProcess2 = Process.Start(startInfo2))
+                            {
+                                Console.WriteLine("TRY: Setting threads value");
+                                exeProcess2.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                                Console.WriteLine("TRY: setting position fen");
+                                exeProcess2.StandardInput.WriteLine("position fen " + Game.Fen);
+                                Console.WriteLine("TRY: setting go");
+                                exeProcess2.StandardInput.WriteLine("go movetime 7500 ");
+                                string output2 = "";
+                                while (!output2.Contains("bestmove"))
+                                {
+                                    output2 = exeProcess2.StandardOutput.ReadLine();
+                                }
+                                Console.WriteLine("TRY: got bestMove");
+                                bestMove = output2.Substring(9, 4);
+                                Console.WriteLine("TRY: Best move is: " + bestMove);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
                 }
             }
             else
@@ -203,20 +258,21 @@ namespace Joueur.cs.Games.Chess
                         string output = "";
                         while (!output.Contains("bestmove"))
                         {
-                            output = exeProcess.StandardOutput.ReadLine();                          
+                            output = exeProcess.StandardOutput.ReadLine();
                         }
                         bestMove = output.Substring(9, 4);
                         Console.WriteLine("Best move is: " + bestMove);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
             }
 
             // 2) print the opponent's last move to the console
-            if (this.Game.Moves.Count > 0) {
+            if (this.Game.Moves.Count > 0)
+            {
                 Console.WriteLine("Opponent's Last Move: '" + this.Game.Moves.Last().San + "'");
             }
 
@@ -224,10 +280,10 @@ namespace Joueur.cs.Games.Chess
             Console.WriteLine("Time Remaining: " + this.Player.TimeRemaining + " ns");
 
             // 4) make a random (and probably invalid) move.
-            Piece toMove=Player.Pieces[0];
-            foreach(Piece p in Player.Pieces)
+            Piece toMove = Player.Pieces[0];
+            foreach (Piece p in Player.Pieces)
             {
-                if (p.File == bestMove[0]+"" && p.Rank==int.Parse(bestMove[1]+""))
+                if (p.File == bestMove[0] + "" && p.Rank == int.Parse(bestMove[1] + ""))
                 {
                     toMove = p;
                 }
