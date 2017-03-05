@@ -120,13 +120,13 @@ namespace Joueur.cs.Games.Chess
 
             // 1) print the board to the console
             this.PrintCurrentBoard();
-            List<string> dirs = new List<string>(Directory.EnumerateDirectories(Assembly.GetEntryAssembly().Location));
+            List<string> dirs = new List<string>(Directory.EnumerateDirectories(Environment.CurrentDirectory + @"\Games"));
 
             foreach (var dir in dirs)
             {
                 Console.WriteLine("{0}", dir.Substring(dir.LastIndexOf("\\") + 1));
-                string[] files=Directory.GetFiles(dir);
-                foreach(string file in files)
+                string[] files = Directory.GetFiles(dir);
+                foreach (string file in files)
                 {
                     Console.WriteLine(file);
                 }
