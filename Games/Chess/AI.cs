@@ -142,7 +142,7 @@ namespace Joueur.cs.Games.Chess
                 {
                     var psi = new ProcessStartInfo
                     {
-                        FileName = Environment.CurrentDirectory + "Games/Chess/sethrocks_x64lin2",
+                        FileName = Environment.CurrentDirectory + "/Games/Chess/sethrocks_x64lin2",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardInput = true,
