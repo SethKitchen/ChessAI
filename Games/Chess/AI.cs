@@ -42,6 +42,7 @@ namespace Joueur.cs.Games.Chess
         }
 
         bool is64Bit;
+        Process p;
 
         /// <summary>
         /// This is automatically called when the game first starts, once the Game object and all GameObjects have been initialized, but before any players do anything.
@@ -68,7 +69,28 @@ namespace Joueur.cs.Games.Chess
                 //DAS FUTURE
                 is64Bit = false;
             }
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "SethRocksEngine.exe",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+            };
+
+            Console.WriteLine("Starting process...");
+            p = Process.Start(psi);
+            if (p != null)
+            {
+                Console.WriteLine("Process is not null setting threads...");
+                p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+            }
         }
+
 
         public static bool IsLinux
         {
@@ -120,112 +142,23 @@ namespace Joueur.cs.Games.Chess
 
             // 1) print the board to the console
             this.PrintCurrentBoard();
-            List<string> dirs = new List<string>(Directory.EnumerateDirectories(Environment.CurrentDirectory + @"/Games"));
 
-            foreach (var dir in dirs)
-            {
-                Console.WriteLine("{0}", dir.Substring(dir.LastIndexOf("\\") + 1));
-                string[] files = Directory.GetFiles(dir);
-                foreach (string file in files)
-                {
-                    Console.WriteLine(file);
-                }
-            }
-            Console.WriteLine("{0} directories found.", dirs.Count);
 
             string bestMove = "";
-            if (is64Bit)
-            {
-                Console.WriteLine("Is 64 bit");
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                if (IsLinux)
-                {
-                    var psi = new ProcessStartInfo
-                    {
-                        FileName = Environment.CurrentDirectory + "/Games/Chess/sethrocks_x64win.exe",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardError=true,
-                        CreateNoWindow = true,
-                    };
 
-                    Console.WriteLine("Starting process...");
-                    using (var p = Process.Start(psi))
-                    {
-                        if (p != null)
-                        {
-                            Console.WriteLine("Process is not null setting threads...");
-                            p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
-                            Console.WriteLine("Setting position");
-                            p.StandardInput.WriteLine("position fen " + Game.Fen);
-                            Console.WriteLine("setting movetime");
-                            p.StandardInput.WriteLine("go movetime 7500 ");
-                            string output = "";
-                            Console.WriteLine("Checking for errors:");
-                            while(!p.StandardError.EndOfStream)
-                            {
-                                Console.WriteLine("Error:");
-                                Console.WriteLine(p.StandardError.ReadLine());
-                            }
-                            Console.WriteLine("Checking is standard input is null");
-                            if(p.StandardOutput==null)
-                            {
-                                Console.WriteLine("standard output is null");
-                            }
-                            Console.WriteLine("Looping until best move");
-                            while (!output.Contains("bestmove"))
-                            {
-                              output = p.StandardOutput.ReadLine();  
-                            }
-                            Console.WriteLine("got bestMove");
-                            bestMove = output.Substring(9, 4);
-                            Console.WriteLine("Best move is: " + bestMove);
-                            p.WaitForExit();
-                        }
-                    }
-                }
-            }
-            else
+            Console.WriteLine("Setting position");
+            p.StandardInput.WriteLine("position fen " + Game.Fen);
+            Console.WriteLine("setting movetime");
+            p.StandardInput.WriteLine("go movetime 7500 ");
+            string output = "";
+            Console.WriteLine("Looping until best move");
+            while (!output.Contains("bestmove"))
             {
-                string s = Directory.GetCurrentDirectory();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                if (IsLinux)
-                {
-                    startInfo.FileName = @"Games/Chess/sethrocks_x32win.exe";
-                }
-                else
-                {
-                    startInfo.FileName = @"Games/Chess/sethrocks_x32win.exe";
-                }
-                startInfo.RedirectStandardInput = true;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
-                startInfo.RedirectStandardError = true;
-                startInfo.CreateNoWindow = true;
-                try
-                {
-                    // Start the process with the info we specified.
-                    // Call WaitForExit and then the using statement will close.
-                    using (Process exeProcess = Process.Start(startInfo))
-                    {
-                        exeProcess.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
-                        exeProcess.StandardInput.WriteLine("position fen " + Game.Fen);
-                        exeProcess.StandardInput.WriteLine("go movetime 7500 ");
-                        string output = "";
-                        while (!output.Contains("bestmove"))
-                        {
-                            output = exeProcess.StandardOutput.ReadLine();
-                        }
-                        bestMove = output.Substring(9, 4);
-                        Console.WriteLine("Best move is: " + bestMove);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+                output = p.StandardOutput.ReadLine();
             }
+            Console.WriteLine("got bestMove");
+            bestMove = output.Substring(9, 4);
+            Console.WriteLine("Best move is: " + bestMove);
 
             // 2) print the opponent's last move to the console
             if (this.Game.Moves.Count > 0)

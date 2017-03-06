@@ -1,0 +1,9 @@
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\SethRocksEngine\bin\Debug\SethRocksEngine.exe.config
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\SethRocksEngine\bin\Debug\SethRocksEngine.exe
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\SethRocksEngine\bin\Debug\SethRocksEngine.pdb
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\SethRocksEngine\obj\Debug\SethRocksEngine.csprojResolveAssemblyReference.cache
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\SethRocksEngine\obj\Debug\SethRocksEngine.exe
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\SethRocksEngine\obj\Debug\SethRocksEngine.pdb
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\bin\Release\SethRocksEngine.exe.config
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\bin\Release\SethRocksEngine.exe
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\bin\Release\SethRocksEngine.pdb

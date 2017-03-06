@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Joueur.cs</name>
+    </assembly>
+    <members>
+        <member name="M:Joueur.cs.BaseAI.GetSetting(System.String)">
+            <summary>
+            Gets an AI setting passed to the program via the `--aiSettings` flag.If the flag was set it will be returned as a string value, null otherwise.
+            </summary>
+            <param name="key">The key of the setting you wish to get the value for</param>
+            <returns>A string representing the value set via command line, or nil if the key was not set</returns>
+        </member>
+        <member name="P:Joueur.cs.BaseGame.GameObjects">
+            <summary>
+            A mapping of every game object's ID to the actual game object. Primarily used by the server and client to easily refer to the game objects via ID.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.BaseGame.Name">
+            <summary>
+            The name of the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.BaseGameObject.Id">
+            <summary>
+            A unique identifier for each game object. During any game IDs will never be re-used.
+            </summary>
+        </member>
+        <member name="T:Joueur.cs.Games.Chess.AI">
+            <summary>
+            This is where you build your AI for the Chess game.
+            </summary>
+        </member>
+        <member name="F:Joueur.cs.Games.Chess.AI.Game">
+            <summary>
+            This is the Game object itself, it contains all the information about the current game
+            </summary>
+        </member>
+        <member name="F:Joueur.cs.Games.Chess.AI.Player">
+            <summary>
+            This is your AI's player. This AI class is not a player, but it should command this Player.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.AI.GetName">
+            <summary>
+            This returns your AI's name to the game server. Just replace the string.
+            </summary>
+            <returns>string of you AI's name.</returns>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.AI.Start">
+            <summary>
+            This is automatically called when the game first starts, once the Game object and all GameObjects have been initialized, but before any players do anything.
+            </summary>
+            <remarks>
+            This is a good place to initialize any variables you add to your AI, or start tracking game objects.
+            </remarks>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.AI.GameUpdated">
+            <summary>
+            This is automatically called every time the game (or anything in it) updates.
+            </summary>
+            <remarks>
+            If a function you call triggers an update this will be called before that function returns.
+            </remarks>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.AI.Ended(System.Boolean,System.String)">
+            <summary>
+            This is automatically called when the game ends.
+            </summary>
+            <remarks>
+            You can do any cleanup of you AI here, or do custom logging. After this function returns the application will close.
+            </remarks>
+            <param name="won">true if your player won, false otherwise</param>
+            <param name="reason">a string explaining why you won or lost</param>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.AI.RunTurn">
+            <summary>
+            This is called every time it is this AI.player's turn.
+            </summary>
+            <returns>Represents if you want to end your turn. True means end your turn, False means to keep your turn going and re-call this function.</returns>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.AI.PrintCurrentBoard">
+            <summary>
+            Prints the current board using pretty ASCII art
+            </summary>
+            <remarks>
+            Note: you can delete this function if you wish
+            </remarks>
+        </member>
+        <member name="T:Joueur.cs.Games.Chess.Game">
+            <summary>
+            The traditional 8x8 chess board with pieces.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.CurrentPlayer">
+            <summary>
+            The player whose turn it is currently. That player can send commands. Other players cannot.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.CurrentTurn">
+            <summary>
+            The current turn number, starting at 0 for the first player's turn.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.Fen">
+            <summary>
+            Forsyth–Edwards Notation, a notation that describes the game board.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.MaxTurns">
+            <summary>
+            The maximum number of turns before the game will automatically end.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.Moves">
+            <summary>
+            The list of Moves that have occurred, in order.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.Pieces">
+            <summary>
+            All the uncaptured Pieces in the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.Players">
+            <summary>
+            List of all the players in the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.Session">
+            <summary>
+            A unique identifier for the game instance that is being played.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Game.TurnsToDraw">
+            <summary>
+            How many turns until the game ends because no pawn has moved and no Piece has been taken.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.Game.#ctor">
+            <summary>
+            Creates a new instance of Game. Used during game initialization, do not call directly.
+            </summary>
+        </member>
+        <member name="T:Joueur.cs.Games.Chess.GameObject">
+            <summary>
+            An object in the game. The most basic class that all game classes should inherit from automatically.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.GameObject.GameObjectName">
+            <summary>
+            String representing the top level Class that this game object is an instance of. Used for reflection to create new instances on clients, but exposed for convenience should AIs want this data.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.GameObject.Logs">
+            <summary>
+            Any strings logged will be stored here. Intended for debugging.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.GameObject.#ctor">
+            <summary>
+            Creates a new instance of GameObject. Used during game initialization, do not call directly.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.GameObject.Log(System.String)">
+            <summary>
+            Adds a message to this GameObject's logs. Intended for your own debugging purposes, as strings stored here are saved in the gamelog.
+            </summary>
+            <param name="message">A string to add to this GameObject's log. Intended for debugging.</param>
+        </member>
+        <member name="T:Joueur.cs.Games.Chess.Move">
+            <summary>
+            Contains all details about a Piece's move in the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.Captured">
+            <summary>
+            The Piece captured by this Move, null if no capture.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.FromFile">
+            <summary>
+            The file the Piece moved from.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.FromRank">
+            <summary>
+            The rank the Piece moved from.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.Piece">
+            <summary>
+            The Piece that was moved.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.Promotion">
+            <summary>
+            The Piece type this Move's Piece was promoted to from a Pawn, empty string if no promotion occurred.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.San">
+            <summary>
+            The standard algebraic notation (SAN) representation of the move.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.ToFile">
+            <summary>
+            The file the Piece moved to.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Move.ToRank">
+            <summary>
+            The rank the Piece moved to.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.Move.#ctor">
+            <summary>
+            Creates a new instance of Move. Used during game initialization, do not call directly.
+            </summary>
+        </member>
+        <member name="T:Joueur.cs.Games.Chess.Piece">
+            <summary>
+            A chess piece.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Piece.Captured">
+            <summary>
+            When the Piece has been captured (removed from the board) this is true. Otherwise false.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Piece.File">
+            <summary>
+            The file (column) coordinate of the Piece represented as a letter [a-h], with 'a' starting at the left of the board.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Piece.HasMoved">
+            <summary>
+            If the Piece has moved from its starting position.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Piece.Owner">
+            <summary>
+            The player that controls this chess Piece.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Piece.Rank">
+            <summary>
+            The rank (row) coordinate of the Piece represented as a number [1-8], with 1 starting at the bottom of the board.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Piece.Type">
+            <summary>
+            The type of chess Piece this is, either: 'King', 'Queen', 'Knight', 'Rook', 'Bishop', or 'Pawn'.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.Piece.#ctor">
+            <summary>
+            Creates a new instance of Piece. Used during game initialization, do not call directly.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.Piece.Move(System.String,System.Int32,System.String)">
+            <summary>
+            Moves the Piece from its current location to the given rank and file.
+            </summary>
+            <param name="file">The file coordinate to move to. Must be [a-h].</param>
+            <param name="rank">The rank coordinate to move to. Must be [1-8].</param>
+            <param name="promotionType">If this is a Pawn moving to the end of the board then this parameter is what to promote it to. When used must be 'Queen', 'Knight', 'Rook', or 'Bishop'.</param>
+            <returns>The Move you did if successful, otherwise null if invalid. In addition if your move was invalid you will lose.</returns>
+        </member>
+        <member name="T:Joueur.cs.Games.Chess.Player">
+            <summary>
+            A player in this game. Every AI controls one player.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.ClientType">
+            <summary>
+            What type of client this is, e.g. 'Python', 'JavaScript', or some other language. For potential data mining purposes.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.Color">
+            <summary>
+            The color (side) of this player. Either 'White' or 'Black', with the 'White' player having the first move.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.InCheck">
+            <summary>
+            True if this player is currently in check, and must move out of check, false otherwise.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.Lost">
+            <summary>
+            If the player lost the game or not.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.MadeMove">
+            <summary>
+            If the Player has made their move for the turn. true means they can no longer move a Piece this turn.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.Name">
+            <summary>
+            The name of the player.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.Opponent">
+            <summary>
+            This player's opponent in the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.Pieces">
+            <summary>
+            All the uncaptured chess Pieces owned by this player.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.RankDirection">
+            <summary>
+            The direction your Pieces must go along the rank axis until they reach the other side.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.ReasonLost">
+            <summary>
+            The reason why the player lost the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.ReasonWon">
+            <summary>
+            The reason why the player won the game.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.TimeRemaining">
+            <summary>
+            The amount of time (in ns) remaining for this AI to send commands.
+            </summary>
+        </member>
+        <member name="P:Joueur.cs.Games.Chess.Player.Won">
+            <summary>
+            If the player won the game or not.
+            </summary>
+        </member>
+        <member name="M:Joueur.cs.Games.Chess.Player.#ctor">
+            <summary>
+            Creates a new instance of Player. Used during game initialization, do not call directly.
+            </summary>
+        </member>
+    </members>
+</doc>

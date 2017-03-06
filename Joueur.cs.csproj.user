@@ -3,4 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <StartArguments>Chess -s r99acm.device.mst.edu -r someSessionNameThatYouLike</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <StartArguments>Chess -s r99acm.device.mst.edu -r someSessionNameThatYouLike</StartArguments>
+  </PropertyGroup>
 </Project>
