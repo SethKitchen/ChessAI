@@ -174,7 +174,7 @@ namespace Joueur.cs.Games.Chess
                                 Console.WriteLine("standard output is null");
                             }
                             Console.WriteLine("Looping until best move");
-                            while (!output.Contains("bestmove") && p.StandardOutput != null)
+                            while (!output.Contains("bestmove"))
                             {
                               output = p.StandardOutput.ReadLine();  
                             }
