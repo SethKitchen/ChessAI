@@ -6,3 +6,4 @@
 \\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\obj\x86\Release\Joueur.cs.csprojResolveAssemblyReference.cache
 \\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\obj\x86\Release\Joueur.cs.exe
 \\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\obj\x86\Release\Joueur.cs.pdb
+\\minerfiles.mst.edu\dfs\Users\sjkyv5\Chess\github\whoa\bin\Release\Games\Chess\SethRocksEngine.exe
