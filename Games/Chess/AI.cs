@@ -74,7 +74,7 @@ namespace Joueur.cs.Games.Chess
 
             var psi = new ProcessStartInfo
             {
-                FileName = "SethRocksEngine.exe",
+                FileName = "Games/Chess/SethRocksEngine.exe",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardInput = true,
