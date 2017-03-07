@@ -152,8 +152,39 @@ namespace Joueur.cs.Games.Chess
             p.StandardInput.WriteLine("go movetime 7500 ");
             string output = "";
             Console.WriteLine("Looping until best move");
+            int maxIterations = 6000;
+            int counter = 0;
             while (!output.Contains("bestmove"))
             {
+                counter++;
+                if(counter==maxIterations)
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = "Games/Chess/SethRocksEngine.exe",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardInput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                    };
+
+                    Console.WriteLine("Starting process...");
+                    p = Process.Start(psi);
+                    if (p != null)
+                    {
+                        Console.WriteLine("Process is not null setting threads...");
+                        p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                        Console.WriteLine("Setting position");
+                        p.StandardInput.WriteLine("position fen " + Game.Fen);
+                        Console.WriteLine("setting movetime");
+                        p.StandardInput.WriteLine("go movetime 7500 ");
+                        Console.WriteLine("Looping until best move");
+                    }
+                    counter = 0;
+                }
                 output = p.StandardOutput.ReadLine();
             }
             Console.WriteLine("got bestMove");
