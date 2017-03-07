@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 namespace Joueur.cs.Games.Chess
 {
@@ -148,6 +149,10 @@ namespace Joueur.cs.Games.Chess
         public override void Ended(bool won, string reason)
         {
             base.Ended(won, reason);
+            p.StandardInput.WriteLine("setoption name Threads value 0");
+            Thread.Sleep(30);
+            p.Kill();
+            p.Dispose();
         }
 
         public bool doLoop()
@@ -199,6 +204,10 @@ namespace Joueur.cs.Games.Chess
             }
             else
             {
+                Console.WriteLine("Process timed out...Stopping old process");
+                p.StandardInput.WriteLine("setoption name Threads value 0");
+                Thread.Sleep(30);
+                p.Kill();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
 
                 var psi = new ProcessStartInfo
