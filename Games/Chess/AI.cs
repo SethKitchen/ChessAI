@@ -70,24 +70,49 @@ namespace Joueur.cs.Games.Chess
                 is64Bit = false;
             }
 
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-
-            var psi = new ProcessStartInfo
+            if (IsLinux)
             {
-                FileName = "Games/Chess/SethRocksEngine.exe",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardInput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true,
-            };
+                ProcessStartInfo startInfo = new ProcessStartInfo();
 
-            Console.WriteLine("Starting process...");
-            p = Process.Start(psi);
-            if (p != null)
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "Games/Chess/SethRocksEngine.exe",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                };
+
+                Console.WriteLine("Starting process...");
+                p = Process.Start(psi);
+                if (p != null)
+                {
+                    Console.WriteLine("Process is not null setting threads...");
+                    p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                }
+            }
+            else
             {
-                Console.WriteLine("Process is not null setting threads...");
-                p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = @"Games\Chess\SethRocksEngine.exe",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                };
+
+                Console.WriteLine("Starting process...");
+                p = Process.Start(psi);
+                if (p != null)
+                {
+                    Console.WriteLine("Process is not null setting threads...");
+                    p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                }
             }
         }
 
@@ -125,6 +150,77 @@ namespace Joueur.cs.Games.Chess
             base.Ended(won, reason);
         }
 
+        public bool doLoop()
+        {
+            string bestMove = "";
+            Console.WriteLine("Setting position");
+            p.StandardInput.WriteLine("position fen " + Game.Fen);
+            Console.WriteLine("setting movetime");
+            p.StandardInput.WriteLine("go movetime 7500 ");
+            string output = "";
+            Console.WriteLine("Looping until best move");
+            IAsyncResult result;
+            Action action = () =>
+            {
+                while (!output.Contains("bestmove"))
+                {
+                    output = p.StandardOutput.ReadLine();
+                }
+            };
+            result = action.BeginInvoke(null, null);
+            if (result.AsyncWaitHandle.WaitOne(10000))
+            {
+                Console.WriteLine("got bestMove");
+                bestMove = output.Substring(9, 4);
+                Console.WriteLine("Best move is: " + bestMove);
+
+                // 2) print the opponent's last move to the console
+                if (this.Game.Moves.Count > 0)
+                {
+                    Console.WriteLine("Opponent's Last Move: '" + this.Game.Moves.Last().San + "'");
+                }
+
+                // 3) print how much time remaining this AI has to calculate moves
+                Console.WriteLine("Time Remaining: " + this.Player.TimeRemaining + " ns");
+
+                // 4) make a random (and probably invalid) move.
+                Piece toMove = Player.Pieces[0];
+                foreach (Piece p in Player.Pieces)
+                {
+                    if (p.File == bestMove[0] + "" && p.Rank == int.Parse(bestMove[1] + ""))
+                    {
+                        toMove = p;
+                    }
+                }
+                string fileToMoveTo = bestMove[2] + "";
+                int rankToMoveTo = int.Parse(bestMove[3] + "");
+                toMove.Move(fileToMoveTo, rankToMoveTo, "Queen");
+                return true;
+            }
+            else
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "Games/Chess/SethRocksEngine.exe",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                };
+
+                Console.WriteLine("Starting process...");
+                p = Process.Start(psi);
+                if (p != null)
+                {
+                    Console.WriteLine("Process is not null setting threads...");
+                    p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                }
+                return false;
+            }
+        }
 
         /// <summary>
         /// This is called every time it is this AI.player's turn.
@@ -143,141 +239,77 @@ namespace Joueur.cs.Games.Chess
             // 1) print the board to the console
             this.PrintCurrentBoard();
 
-
-            string bestMove = "";
-
-            Console.WriteLine("Setting position");
-            p.StandardInput.WriteLine("position fen " + Game.Fen);
-            Console.WriteLine("setting movetime");
-            p.StandardInput.WriteLine("go movetime 7500 ");
-            string output = "";
-            Console.WriteLine("Looping until best move");
-            int maxIterations = 6000;
-            int counter = 0;
-            while (!output.Contains("bestmove"))
+            while(!doLoop())
             {
-                counter++;
-                if(counter==maxIterations)
-                {
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
 
-                    var psi = new ProcessStartInfo
-                    {
-                        FileName = "Games/Chess/SethRocksEngine.exe",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true,
-                    };
-
-                    Console.WriteLine("Starting process...");
-                    p = Process.Start(psi);
-                    if (p != null)
-                    {
-                        Console.WriteLine("Process is not null setting threads...");
-                        p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
-                        Console.WriteLine("Setting position");
-                        p.StandardInput.WriteLine("position fen " + Game.Fen);
-                        Console.WriteLine("setting movetime");
-                        p.StandardInput.WriteLine("go movetime 7500 ");
-                        Console.WriteLine("Looping until best move");
-                    }
-                    counter = 0;
-                }
-                output = p.StandardOutput.ReadLine();
-            }
-            Console.WriteLine("got bestMove");
-            bestMove = output.Substring(9, 4);
-            Console.WriteLine("Best move is: " + bestMove);
-
-            // 2) print the opponent's last move to the console
-            if (this.Game.Moves.Count > 0)
-            {
-                Console.WriteLine("Opponent's Last Move: '" + this.Game.Moves.Last().San + "'");
             }
 
-            // 3) print how much time remaining this AI has to calculate moves
-            Console.WriteLine("Time Remaining: " + this.Player.TimeRemaining + " ns");
-
-            // 4) make a random (and probably invalid) move.
-            Piece toMove = Player.Pieces[0];
-            foreach (Piece p in Player.Pieces)
-            {
-                if (p.File == bestMove[0] + "" && p.Rank == int.Parse(bestMove[1] + ""))
-                {
-                    toMove = p;
-                }
-            }
-            string fileToMoveTo = bestMove[2] + "";
-            int rankToMoveTo = int.Parse(bestMove[3] + "");
-            toMove.Move(fileToMoveTo, rankToMoveTo, "Queen");
 
             return true; // to signify we are done with our turn.
         }
 
-        /// <summary>
-        /// Prints the current board using pretty ASCII art
-        /// </summary>
-        /// <remarks>
-        /// Note: you can delete this function if you wish
-        /// </remarks>
-        public void PrintCurrentBoard()
+    /// <summary>
+    /// Prints the current board using pretty ASCII art
+    /// </summary>
+    /// <remarks>
+    /// Note: you can delete this function if you wish
+    /// </remarks>
+    public void PrintCurrentBoard()
+    {
+        for (int rank = 9; rank >= -1; rank--)
         {
-            for (int rank = 9; rank >= -1; rank--)
+            string str = "";
+            if (rank == 9 || rank == 0) // then the top or bottom of the board
             {
-                string str = "";
-                if (rank == 9 || rank == 0) // then the top or bottom of the board
+                str = "   +------------------------+";
+            }
+            else if (rank == -1) // then show the ranks
+            {
+                str = "     a  b  c  d  e  f  g  h";
+            }
+            else // board
+            {
+                str += " " + rank + " |";
+                // fill in all the files with pieces at the current rank
+                for (int fileOffset = 0; fileOffset < 8; fileOffset++)
                 {
-                    str = "   +------------------------+";
-                }
-                else if (rank == -1) // then show the ranks
-                {
-                    str = "     a  b  c  d  e  f  g  h";
-                }
-                else // board
-                {
-                    str += " " + rank + " |";
-                    // fill in all the files with pieces at the current rank
-                    for (int fileOffset = 0; fileOffset < 8; fileOffset++)
+                    string file = "" + (char)(((int)"a"[0]) + fileOffset); // start at a, with with file offset increasing the char;
+                    Piece currentPiece = null;
+                    foreach (var piece in this.Game.Pieces)
                     {
-                        string file = "" + (char)(((int)"a"[0]) + fileOffset); // start at a, with with file offset increasing the char;
-                        Piece currentPiece = null;
-                        foreach (var piece in this.Game.Pieces)
+                        if (piece.File == file && piece.Rank == rank) // then we found the piece at (file, rank)
                         {
-                            if (piece.File == file && piece.Rank == rank) // then we found the piece at (file, rank)
-                            {
-                                currentPiece = piece;
-                                break;
-                            }
+                            currentPiece = piece;
+                            break;
                         }
-
-                        char code = '.'; // default "no piece";
-                        if (currentPiece != null)
-                        {
-                            code = currentPiece.Type[0];
-
-                            if (currentPiece.Type == "Knight") // 'K' is for "King", we use 'N' for "Knights"
-                            {
-                                code = 'N';
-                            }
-
-                            if (currentPiece.Owner.Id == "1") // the second player (black) is lower case. Otherwise it's upppercase already
-                            {
-                                code = Char.ToLower(code);
-                            }
-                        }
-
-                        str += " " + code + " ";
                     }
 
-                    str += "|";
+                    char code = '.'; // default "no piece";
+                    if (currentPiece != null)
+                    {
+                        code = currentPiece.Type[0];
+
+                        if (currentPiece.Type == "Knight") // 'K' is for "King", we use 'N' for "Knights"
+                        {
+                            code = 'N';
+                        }
+
+                        if (currentPiece.Owner.Id == "1") // the second player (black) is lower case. Otherwise it's upppercase already
+                        {
+                            code = Char.ToLower(code);
+                        }
+                    }
+
+                    str += " " + code + " ";
                 }
 
-                Console.WriteLine(str);
+                str += "|";
             }
-        }
 
-        #endregion
+            Console.WriteLine(str);
+        }
     }
+
+    #endregion
+}
 }
