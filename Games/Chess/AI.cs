@@ -90,7 +90,7 @@ namespace Joueur.cs.Games.Chess
                 if (p != null)
                 {
                     Console.WriteLine("Process is not null setting threads...");
-                    p.StandardInput.WriteLine("setoption name Threads value " + Environment.ProcessorCount);
+                    p.StandardInput.WriteLine("setoption name Threads value 1");
                 }
             }
             else
