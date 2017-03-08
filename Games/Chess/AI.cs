@@ -173,7 +173,7 @@ namespace Joueur.cs.Games.Chess
                 }
             };
             result = action.BeginInvoke(null, null);
-            if (result.AsyncWaitHandle.WaitOne(10000))
+            if (result.AsyncWaitHandle.WaitOne(16000))
             {
                 Console.WriteLine("got bestMove");
                 bestMove = output.Substring(9, 4);
